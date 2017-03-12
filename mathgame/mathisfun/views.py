@@ -10,10 +10,12 @@ def selection(request):
     return render(request, 'mathisfun/selection.html')
 
 def solver(request):
-    return HttpResponse("Inside solver")
+    #return HttpResponse("Inside solver")
+    return render(request, 'mathisfun/solver.html')
 
 def quizzer(request):
-    return HttpResponse("Inside quizzer")
+    #return HttpResponse("Inside quizzer")
+    return render(request, 'mathisfun/quizzer.html')
 
 def results(request):
     return HttpResponse("inside results")
