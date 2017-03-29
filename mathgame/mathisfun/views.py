@@ -1,9 +1,16 @@
 from django.shortcuts import render
-
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Results
 # Create your views here.
 
 from django.http import HttpResponse
 
+Users = Results.objects.all()
+
+def login(request):
+    return render(request, 'mathisfun/login.html')
 
 def selection(request):
 
@@ -18,7 +25,38 @@ def quizzer(request):
     return render(request, 'mathisfun/quizzer.html')
 
 def results(request):
-    return HttpResponse("inside results")
+    return render(request, 'mathisfun/charts.html', {})
+
+class ChartData(APIView):
+
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        data = {}
+        # ***************************************************************
+        # This needs to be replaced for the user that is logged in
+        currentUser = "<userid>"
+        data.setdefault(currentUser,[5,4,6,5,20])
+        # ***************************************************************
+        data.setdefault("user",currentUser)
+        sumScores = [0,0,0,0,0]
+        for user in Results.objects.all():
+            sumScores[0] = sumScores[0] + user.addition
+            sumScores[1] = sumScores[1] + user.subtraction
+            sumScores[2] = sumScores[2] + user.multiplication
+            sumScores[3] = sumScores[3] + user.division
+            sumScores[4] = sumScores[4] + user.total
+        count = Users.count()
+        averageScores = [
+            sumScores[0] / count,
+            sumScores[1] / count,
+            sumScores[2] / count,
+            sumScores[3] / count,
+            sumScores[4] / count
+        ]
+        data.setdefault("all",averageScores)
+        return Response(data)
 
 
 # TODO remove these. they are just for example purposes

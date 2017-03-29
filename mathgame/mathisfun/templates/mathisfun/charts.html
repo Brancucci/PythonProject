@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+
+    var endpoint = 'api/chart/data';
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function (data) {
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["+","-","*","/","All Ops"],
+                    datasets: [{
+                        label: data["user"],
+                        data: data[data["user"]],
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(0, 0, 225, 1)'
+                    },
+                    {
+                        label: "All Users",
+                        data: data["all"],
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(225, 0, 0, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 20
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontSize: 20
+                        }
+                    }
+                }
+            });
+            console.log(data)
+        },
+        error: function (error_data) {
+            console.log("error");
+            console.log(error_data)
+        }
+    });
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<div class='row'>
+    <div class='col-sm-12'>
+        <h1>Results</h1>
+        <canvas id="myChart" width="400" height="240"></canvas>
+    </div>
+</div>
+
+{% endblock content %}

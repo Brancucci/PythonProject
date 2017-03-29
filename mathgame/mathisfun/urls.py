@@ -7,7 +7,8 @@ urlpatterns = [
     url(r'^quizzer/$', views.quizzer, name='quizzer'),
     url(r'^solver/$', views.solver, name='solver'),
     url(r'^results/$', views.results, name='results'),
-
+    url(r'^login.html/$', views.login, name='login.html'),
+    url(r'^results/api/chart/data/$', views.ChartData.as_view()),
 ]
 
 
