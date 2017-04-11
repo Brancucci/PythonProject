@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartjs',
     'rest_framework',
-    'mathgame'
+    'mathgame',
+    'bootstrap3'
 ]
 
 MIDDLEWARE = [
