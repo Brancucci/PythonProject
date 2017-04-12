@@ -11,6 +11,9 @@ Solver - The Solver provides the answer to a fractions equation supplied by the 
 
 Results - The Results Viewer presents a bar chart showing the user's average score for each operator and for all operators combined
 
+## How to Login
+localhost:8000/math/login
+
 ## Create an admin user
 python manage.py createsuperuser
 
