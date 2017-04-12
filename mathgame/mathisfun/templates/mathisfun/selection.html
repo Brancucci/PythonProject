@@ -2,21 +2,31 @@
 {% block title %}Selection{% endblock %}
 
 {% block content %}
-  <h1>Please Select An Option</h1>
+{% load bootstrap3 %}
+{% bootstrap_css %}
+    <h1 class="page-header">Please Select An Option</h1>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <form action="solver/" method="get">
+                <input type="submit" value="Solver" class="btn btn-success" style="width: 100%"/>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <form action="quizzer/" method="get">
+                <input type="submit" value="Quizzer" class="btn btn-primary" style="width: 100%"/>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <form action="results/" method="get">
+                <input type="submit" value="Results" class="btn btn-warning" style="width: 100%"/>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
 
-    <form action="solver/" method="get">
-        <input type="submit" value="Solver" />
-    </form>
-
-    <form action="quizzer/" method="get">
-        <input type="submit" value="Quizzer" />
-    </form>
-
-    <form action="results/" method="get">
-        <input type="submit" value="Results" />
-    </form>
-
-  </form>
 {% endblock %}
 
 
