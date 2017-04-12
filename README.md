@@ -28,3 +28,17 @@ open app at: localhost:8000/math
 
 ## To invoke Python shell
 python manage.py shell
+
+## To get user ID
+{{ user.get_username }}
+
+## active students registered for Login and Testing
+user: student01     password: password01
+
+user: student02     password: password02
+
+user: student03     password: password03
+
+user: student04     password: password04
+
+user: student05     password: password05
