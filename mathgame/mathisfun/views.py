@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 from .models import Results
 # Create your views here.
 
@@ -9,8 +11,20 @@ from django.http import HttpResponse
 
 Users = Results.objects.all()
 
-def login(request):
-    return render(request, 'mathisfun/login.html')
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return redirect('selection')
+        else:
+            pass
+            return HttpResponse('<h1>User not active</h1>')
+    else:
+        return HttpResponse('<h1>User does not exist</h1>')
+
 
 def selection(request):
 

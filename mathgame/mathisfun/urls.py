@@ -1,13 +1,14 @@
-from django.conf.urls import url
-
+from django.conf.urls import url, include
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.selection, name='selection'),
-    url(r'^quizzer/$', views.quizzer, name='quizzer'),
-    url(r'^solver/$', views.solver, name='solver'),
-    url(r'^results/$', views.results, name='results'),
-    url(r'^login/$', views.login, name='login'),
+    # this includes all of the built in login, logout plus extra features
+    url('^', include('django.contrib.auth.urls')),
+    url(r'^login/mathisfun/selection/$', views.selection, name='selection'),
+    url(r'^login/mathisfun/selection/quizzer/$', views.quizzer, name='quizzer'),
+    url(r'^login/mathisfun/selection/solver/$', views.solver, name='solver'),
+    url(r'^login/mathisfun/selection/results/$', views.results, name='results'),
     url(r'^results/api/chart/data/$', views.ChartData.as_view()),
 ]
 
