@@ -1,8 +1,8 @@
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.contrib.auth.decorators import login_required
 
 from .models import Results
 # Create your views here.
@@ -26,20 +26,28 @@ def login_view(request):
         return HttpResponse('<h1>User does not exist</h1>')
 
 
+@login_required
 def selection(request):
 
     return render(request, 'mathisfun/selection.html')
 
+
+@login_required
 def solver(request):
     #return HttpResponse("Inside solver")
     return render(request, 'mathisfun/solver.html')
 
+
+@login_required
 def quizzer(request):
     #return HttpResponse("Inside quizzer")
     return render(request, 'mathisfun/quizzer.html')
 
+
+@login_required
 def results(request):
     return render(request, 'mathisfun/charts.html', {})
+
 
 class ChartData(APIView):
 

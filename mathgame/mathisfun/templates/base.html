@@ -11,6 +11,15 @@
     {% include 'base/bootstrap_defaults.html' %}
   </head>
   <body>
+  <ul class="sidebar-nav">
+
+   {% if user.is_authenticated %}
+     <li>User: {{ user.get_username }}</li>
+     <li><a href="{% url 'logout'%}?next=/math/login">Logout</a></li>
+   {% else %}
+     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+   {% endif %}
+  </ul>
     <div class='container'>
     {% block content %}
     {% endblock content %}

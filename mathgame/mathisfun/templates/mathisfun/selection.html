@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Selection</title>
-</head>
-<body>
-    <h1>Please Select An Option</h1>
+{% extends 'base.html' %}
+{% block title %}Selection{% endblock %}
+
+{% block content %}
+  <h1>Please Select An Option</h1>
 
     <form action="solver/" method="get">
         <input type="submit" value="Solver" />
@@ -19,7 +16,9 @@
         <input type="submit" value="Results" />
     </form>
 
-</body>
-</html>
+  </form>
+{% endblock %}
+
+
 
 
