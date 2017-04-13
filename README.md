@@ -35,6 +35,9 @@ python manage.py shell
 ## To get user ID
 {{ user.get_username }}
 
+## DB Note: There is a hidden 'id' column that is auto imcremented and is the primary key
+To find row by id: Results.objects.filter(id=1)
+
 ## active students registered for Login and Testing
 user: student01     password: password01
 
