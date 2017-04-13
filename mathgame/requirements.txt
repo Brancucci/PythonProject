@@ -1,0 +1,4 @@
+django
+djangorestframework
+django-bootstrap3
+chartjs
