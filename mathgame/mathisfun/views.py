@@ -9,6 +9,8 @@ from operator import add, sub, mul, truediv
 from fractions import Fraction
 from django.contrib import messages
 from .models import Results
+from random import randint
+from mathgame.forms import QuizzerForm
 
 # Create your views here.
 
@@ -89,10 +91,27 @@ def solver(request):
 
 @login_required
 def quizzer(request):
-    model = Results()
-    context = {'model': model}
-    return render(request, 'mathisfun/quizzer.html', context)
-
+    if request.method == 'POST':
+        form = QuizzerForm(request.POST)
+        ops = {Results.ADD: add, Results.SUB: sub, Results.MUL: mul, Results.DIV: truediv}
+        if form.is_valid():
+            fraction1 = Fraction(int(request.POST['fraction1num']), int(request.POST['fraction1den']))
+            fraction2 = Fraction(int(request.POST['fraction2num']), int(request.POST['fraction2den']))
+            answer = ops[int(request.POST['operator'])](fraction1, fraction2)
+            userAnswer = Fraction(form.cleaned_data.get('numerator'), form.cleaned_data.get('denominator'))
+            if form.cleaned_data.get('numerator') == answer.numerator and form.cleaned_data.get('denominator') == answer.denominator:
+                return HttpResponse("100%")
+            elif userAnswer == answer:
+                return HttpResponse("50%")
+            else:
+                return HttpResponse("0%")
+    else:
+        model = Results()
+        fraction1 = Fraction(randint(1,20), randint(1,20))
+        fraction2 = Fraction(randint(1,20), randint(1,20))
+        form = QuizzerForm()
+        context = {'model': model, 'fraction1': fraction1, 'fraction2': fraction2, 'form': form}
+        return render(request, 'mathisfun/quizzer.html', context)
 
 @login_required
 def results(request):

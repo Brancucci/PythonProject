@@ -3,6 +3,21 @@
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
+<style>
+.fraction, .top, .bottom {
+    padding: 0 5px;    
+}
+
+.fraction {
+    display: inline-block;
+    text-align: center;    
+}
+
+.bottom{
+    border-top: 1px solid #000;
+    display: block;
+}
+</style>
 <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
 <script>
     $(document).ready(function(){
@@ -11,11 +26,18 @@
                 alert("You must select an operator");
             } else {
                 $("#operator-supply").html($("#operator :selected").text());
-                $("#body").show();
-                $("#generator-container").hide();
+                $("#body").fadeIn(1000);
+                $("#generator-container").slideToggle(100);
                 $("#header").html("<h3>Quiz</h3>")
                 $("#operator-val").val($("#operator").val());
             }
+        });
+        $('.fraction').each(function(key, value) {
+            $this = $(this);
+            var split = $this.html().split("/");
+            if( split.length == 2 ) {
+                $this.html('<span class="top">'+split[0]+'</span><span class="bottom">'+split[1]+'</span>');
+            }    
         });
     });
 </script>
@@ -39,16 +61,24 @@
     <div class="panel-heading" id="header" style="text-align: center;">
         <h3>Select Operator then click "Generate"</h3>
     </div>
-    <div class="panel-body" id="body" style="text-align: center; display: none; font-size: 22px;">
-        <form>
-            <input name="num1" type="number" class="form-group">
-            /
-            <input name="div1" type="number" class="form-group">
-            <span id="operator-supply" style="margin: 5px;"></span>
-            <input name="num2" type="number" class="form-group">
-            /
-            <input name="div2" type="number" class="form-group">
+    <div class="panel-body" id="body" style="text-align: center; display: none; font-size: 20px;">
+        <form action="/math/selection/quizzer/" method="post">
+            {% csrf_token %}
+            <span class="fraction">{{ fraction1.numerator }}/{{ fraction1.denominator }}</span>
+            <span id="operator-supply" style="margin: 5px 5px 10px 5px; font-size: 28px;"></span>
+            <span class="fraction">{{ fraction2.numerator }}/{{fraction2.denominator }}</span>
+            <span>= </span>
+            {{ form }}
             <input type="hidden" id="operator-val" name="operator" value="">
+            <input type="hidden" name="fraction1num" value="{{ fraction1.numerator }}">
+            <input type="hidden" name="fraction1den" value="{{ fraction1.denominator}}">
+            <input type="hidden" name="fraction2num" value="{{ fraction2.numerator }}">
+            <input type="hidden" name="fraction2den" value="{{ fraction2.denominator}}">
+            <br/>
+            <br/>
+            <div class="alert alert-warning"><i class="glyphicon glyphicon-warning-sign"></i> You must reduce the fraction to get full points</div>
+            <br/>
+            <button class="btn btn-success">Check</button>
         </form>
     </div>
 </div>
