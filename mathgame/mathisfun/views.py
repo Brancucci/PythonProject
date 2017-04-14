@@ -63,11 +63,13 @@ def solver(request):
     opdropdown = ChoiceForm()
     context = {'myoperators': opdropdown}
     getrequest = request.GET
+    # This covers the case when the user first loads the Solver page
     if len(getrequest) == 0:
         return render(request, 'mathisfun/solver.html', context)
     try:
         for x in getrequest.keys():
             if not getrequest[x]:
+                # Missing input, prompt user to enter all values
                 raise ValueError
         op = getrequest.get('operations', None)
         leftfract = Fraction(int(getrequest.get('left_num', None)), int(getrequest.get('left_denom', None)))
@@ -78,6 +80,7 @@ def solver(request):
                    'left_num': leftfract.numerator, 'left_denom': leftfract.denominator,
                    'right_num': rightfract.numerator, 'right_denom': rightfract.denominator,
                    'myoperators': opdropdown}
+        # This covers the standard case when the user entered all faction values and submits to see the results
         return render(request, 'mathisfun/solver.html', context)
     except ValueError:
         """This covers the case when the user hasn't entered all values"""

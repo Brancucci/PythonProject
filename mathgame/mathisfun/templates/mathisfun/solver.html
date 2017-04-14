@@ -1,4 +1,4 @@
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
@@ -11,18 +11,17 @@
 {% endif %}
     <div style="text-align: center;" id="generator-container">
 <form style="font-size:18px">
-  <input type="number" name="left_num" id="left_num" value="{{left_num}}" class="form-group input">
+  <input type="number" name="left_num" id="left_num" value="{{left_num}}" class="form-group input" required>
     /
-    <input type="number" name="left_denom" id="left_denom" value="{{left_denom}}" class="form-group input">
+    <input type="number" name="left_denom" id="left_denom" value="{{left_denom}}" class="form-group input" min="1" required>
     <font style="font-size:28px">{{myoperators.operations}}</font>
-  <input type="number" name="right_num" id="right_num" value="{{right_num}}" class="form-group">
+  <input type="number" name="right_num" id="right_num" value="{{right_num}}" class="form-group" required>
     <font style="font-size:28px">/</font>
-    <input type="number" name="right_denom" id="right_denom" value="{{right_denom}}" class="form-group">
+    <input type="number" name="right_denom" id="right_denom" value="{{right_denom}}" class="form-group" min="1" required>
 
     <font style="font-size:26px"> = {{ result_num}} / {{ result_denom }}</font>
     <p><br><input type="submit" value="Solve" style="font-size: 28px;" class="btn btn-primary"></p>
 </form>
     </div>
 </center>
-
 {% endblock %}
