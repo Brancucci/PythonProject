@@ -3,28 +3,26 @@
 {% load bootstrap3 %}
 {% bootstrap_css %}
 <center>
-<h1>Solver</h1>
-<form>
-    <font style="font-size:18px">
+<h1 class="page-header">Solver</h1>
+    {% if messages %}
+    {% for message in messages %}
+      <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+    <div style="text-align: center;" id="generator-container">
+<form style="font-size:18px">
   <input type="number" name="left_num" id="left_num" value="{{left_num}}" class="form-group input">
     /
     <input type="number" name="left_denom" id="left_denom" value="{{left_denom}}" class="form-group input">
-    <!--
-    <select name="operator" class="btn btn-default dropdown-toggle" >
-        <option value="addition" >+</option>
-        <option value="subtraction">-</option>
-        <option value="multiplication" selected>*</option>
-        <option value="division">/</option>
-    </select> -->
     <font style="font-size:28px">{{myoperators.operations}}</font>
   <input type="number" name="right_num" id="right_num" value="{{right_num}}" class="form-group">
     <font style="font-size:28px">/</font>
     <input type="number" name="right_denom" id="right_denom" value="{{right_denom}}" class="form-group">
 
     <font style="font-size:26px"> = {{ result_num}} / {{ result_denom }}</font>
-    <p><br><input type="submit" value="Solve" class="btn btn-primary btn-lg"></p>
-        </font>
+    <p><br><input type="submit" value="Solve" style="font-size: 28px;" class="btn btn-primary"></p>
 </form>
+    </div>
 </center>
 
 {% endblock %}

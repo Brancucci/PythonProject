@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from operator import add, sub, mul, truediv
 from fractions import Fraction
+from django.contrib import messages
 from .models import Results
 
 # Create your views here.
@@ -51,6 +52,7 @@ class ChoiceForm(forms.Form):
 
 @login_required
 def solver(request):
+    """This function renders the Fraction Solver to help users with fractional math."""
     ops = {'addition': add,
            'subtraction': sub,
            'multiplication': mul,
@@ -64,7 +66,7 @@ def solver(request):
     try:
         for x in getrequest.keys():
             if not getrequest[x]:
-                raise AttributeError
+                raise ValueError
         op = getrequest.get('operations', None)
         leftfract = Fraction(int(getrequest.get('left_num', None)), int(getrequest.get('left_denom', None)))
         rightfract = Fraction(int(getrequest.get('right_num', None)), int(getrequest.get('right_denom', None)))
@@ -75,12 +77,14 @@ def solver(request):
                    'right_num': rightfract.numerator, 'right_denom': rightfract.denominator,
                    'myoperators': opdropdown}
         return render(request, 'mathisfun/solver.html', context)
-    except AttributeError:
-        # TODO:Add Error message to user when they enter bad data.
-        print('Error: Missing an input value')
+    except ValueError:
+        """This covers the case when the user hasn't entered all values"""
+        messages.error(request, 'You must enter all fraction values!')
+        return render(request, 'mathisfun/solver.html', context)
     except ZeroDivisionError:
-        # TODO:Add Error message to user when they enter zero as denominator.
-        print("Error: Denominator can't be zero!")
+        """This covers the case when the denominator is zero, Fraction throws a ZeroDivisionError"""
+        messages.error(request, 'Denominators cannot be zero!')
+        return render(request, 'mathisfun/solver.html', context)
 
 
 @login_required
