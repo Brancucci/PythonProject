@@ -1,2 +1,55 @@
-<h1>Quizzer</h1>
-
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+<script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        $("#generate").click(function() {
+            if (!$("#operator").val()) {
+                alert("You must select an operator");
+            } else {
+                $("#operator-supply").html($("#operator :selected").text());
+                $("#body").show();
+                $("#generator-container").hide();
+                $("#header").html("<h3>Quiz</h3>")
+                $("#operator-val").val($("#operator").val());
+            }
+        });
+    });
+</script>
+<h1 class="page-header">Quizzer</h1>
+<div style="text-align: center;" id="generator-container">
+    <div>
+        <select id="operator" class="form-group" style="font-size: 28px; text-align: center;">
+            <option value="{{ model.ADD }}">+</option>
+            <option value="{{ model.SUB }}">-</option>
+            <option value="{{ model.MUL }}">×</option>
+            <option value="{{ model.DIV }}">÷</option>
+        </select>
+    </div>
+    <br/>
+    <div>
+        <button id="generate" style="font-size: 28px;" class="btn btn-primary">Generate</button>
+    </div>
+</div>
+<br/>
+<div class="panel panel-default">
+    <div class="panel-heading" id="header" style="text-align: center;">
+        <h3>Select Operator then click "Generate"</h3>
+    </div>
+    <div class="panel-body" id="body" style="text-align: center; display: none; font-size: 22px;">
+        <form>
+            <input name="num1" type="number" class="form-group">
+            /
+            <input name="div1" type="number" class="form-group">
+            <span id="operator-supply" style="margin: 5px;"></span>
+            <input name="num2" type="number" class="form-group">
+            /
+            <input name="div2" type="number" class="form-group">
+            <input type="hidden" id="operator-val" name="operator" value="">
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -85,8 +85,9 @@ def solver(request):
 
 @login_required
 def quizzer(request):
-    # return HttpResponse("Inside quizzer")
-    return render(request, 'mathisfun/quizzer.html')
+    model = Results()
+    context = {'model': model}
+    return render(request, 'mathisfun/quizzer.html', context)
 
 
 @login_required
