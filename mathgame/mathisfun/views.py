@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from operator import add, sub, mul, truediv
 from fractions import Fraction
 from django.contrib import messages
@@ -94,27 +94,37 @@ def solver(request):
 
 @login_required
 def quizzer(request):
+    model = Results()
     if request.method == 'POST':
         form = QuizzerForm(request.POST)
-        ops = {Results.ADD: add, Results.SUB: sub, Results.MUL: mul, Results.DIV: truediv}
+        ops = {model.ADD: add, model.SUB: sub, model.MUL: mul, model.DIV: truediv}
         if form.is_valid():
-            fraction1 = Fraction(int(request.POST['fraction1num']), int(request.POST['fraction1den']))
-            fraction2 = Fraction(int(request.POST['fraction2num']), int(request.POST['fraction2den']))
-            answer = ops[int(request.POST['operator'])](fraction1, fraction2)
-            userAnswer = Fraction(form.cleaned_data.get('numerator'), form.cleaned_data.get('denominator'))
-            if form.cleaned_data.get('numerator') == answer.numerator and form.cleaned_data.get('denominator') == answer.denominator:
-                return HttpResponse("100%")
-            elif userAnswer == answer:
-                return HttpResponse("50%")
+            if form.cleaned_data.get('denominator') != 0:
+                fraction1 = Fraction(int(request.POST['fraction1num']), int(request.POST['fraction1den']))
+                fraction2 = Fraction(int(request.POST['fraction2num']), int(request.POST['fraction2den']))
+                answer = ops[int(request.POST['operator'])](fraction1, fraction2)
+                userAnswer = Fraction(form.cleaned_data.get('numerator'), form.cleaned_data.get('denominator'))
+                if form.cleaned_data.get('numerator') == answer.numerator and form.cleaned_data.get('denominator') == answer.denominator:
+                    average = 1
+                    messages.success(request, '<div style="font-size: 20px;">Nice work! The answer you provided was correct<br/><strong>Grade Received: </strong>100%<br/><strong>Your Answer: </strong>' + str(userAnswer.numerator) + '/' + str(userAnswer.denominator) + '</div>', extra_tags='safe')
+                elif userAnswer == answer:
+                    average = .5
+                    messages.warning(request, '<div style="font-size: 20px;">The answer you provided was correct but not reduced<br/><strong>Grade Received: </strong>50%<br/><strong>Your Answer: </strong>' + str(form.cleaned_data.get('numerator')) + '/' + str(form.cleaned_data.get('denominator')) + '<br/><strong>Correct Answer: </strong>' + str(answer.numerator) + '/' + str(answer.denominator) + '</div>', extra_tags='safe')
+                else:
+                    average = 0
+                    messages.error(request, '<div style="font-size: 20px;">The answer you provided was not correct<br/><strong>Grade Received: </strong>0%<br/><strong>Your Answer: </strong>' + str(userAnswer.numerator) + '/' + str(userAnswer.denominator) + '<br/><strong>Correct Answer: </strong>' + str(answer.numerator) + '/' + str(answer.denominator) + '</div>', extra_tags='safe')
+                model.userName = request.user.username
+                model.operator = int(request.POST['operator'])
+                model.average = average
+                model.save()
             else:
-                return HttpResponse("0%")
-    else:
-        model = Results()
-        fraction1 = Fraction(randint(1,20), randint(1,20))
-        fraction2 = Fraction(randint(1,20), randint(1,20))
-        form = QuizzerForm()
-        context = {'model': model, 'fraction1': fraction1, 'fraction2': fraction2, 'form': form}
-        return render(request, 'mathisfun/quizzer.html', context)
+                messages.error(request, '<div style="font-size: 20px;">Your answer cannot have a denominator with the value 0</div>', extra_tags='safe')
+            return HttpResponseRedirect('/math/selection/quizzer')
+    form = QuizzerForm()
+    fraction1 = Fraction(randint(1,20), randint(1,20))
+    fraction2 = Fraction(randint(1,20), randint(1,20))
+    context = {'model': model, 'fraction1': fraction1, 'fraction2': fraction2, 'form': form}
+    return render(request, 'mathisfun/quizzer.html', context)
 
 @login_required
 def results(request):
