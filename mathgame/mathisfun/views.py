@@ -139,26 +139,59 @@ class ChartData(APIView):
         data = {}
         # ***************************************************************
         # This needs to be replaced for the user that is logged in
-        currentUser = "<userid>"
-        data.setdefault(currentUser, [5, 4, 6, 5, 20])
-        # ***************************************************************
-        data.setdefault("user", currentUser)
-        sumScores = [0, 0, 0, 0, 0]
-        for user in Results.objects.all():
-            sumScores[0] = sumScores[0] + user.addition
-            sumScores[1] = sumScores[1] + user.subtraction
-            sumScores[2] = sumScores[2] + user.multiplication
-            sumScores[3] = sumScores[3] + user.division
-            sumScores[4] = sumScores[4] + user.total
-        count = Users.count()
+        currentUser = request.user.username
+        sumScores = [[], [], [], []]
+        averageScores = [None] * 4
 
-        averageScores = [
-            sumScores[0] / count,
-            sumScores[1] / count,
-            sumScores[2] / count,
-            sumScores[3] / count,
-            sumScores[4] / count
-        ]
+        for score in Results.objects.filter(id=currentUser):
+            sumScores[score.operator].append(score.average)
+        for s in sumScores:
+            if len(s) > 0:
+                averageScores[sumScores.index(s)] = (sum(s) / float(len(s)))
+        total = []
+        for i in range(4):
+            if averageScores[i] is not None:
+                total.append(averageScores[i])
+            else:
+                averageScores[i] = 0
+        if len(total) > 0:
+            averageScores.append(sum(total) / float(len(total)))
+        else:
+            averageScores.append(0)
+
+        data.setdefault(currentUser, averageScores)
+        data.setdefault("user", currentUser)
+
+        allAverages = [[], [], [], [], []]
+        for user in Users.objects.all():
+            sumScores = [[], [], [], []]
+            averageScores = [None] * 4
+            total.clear()
+
+            for score in Results.objects.filter(id=currentUser):
+                sumScores[score.operator].append(score.average)
+            for s in sumScores:
+                if len(s) > 0:
+                    averageScores[sumScores.index(s)] = (sum(s) / float(len(s)))
+            total = []
+            for i in range(4):
+                if averageScores[i] is not None:
+                    total.append(averageScores[i])
+            if len(total) > 0:
+                averageScores.append(sum(total) / float(len(total)))
+            else:
+                averageScores.append(None)
+            for i in range(5):
+                if averageScores[i] is not None:
+                    allAverages[i].append(averageScores[i])
+
+        averageScores = [None] * 5
+        for i in range(5):
+            if len(allAverages[i]) > 0:
+                averageScores[i] = sum(allAverages[i]) / float(len(allAverages[i]))
+            else:
+                averageScores[i] = 0
+
         data.setdefault("all", averageScores)
         return Response(data)
 
