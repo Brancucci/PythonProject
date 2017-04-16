@@ -1,4 +1,5 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 from django import forms
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
@@ -137,13 +138,12 @@ class ChartData(APIView):
 
     def get(self, request, format=None):
         data = {}
-        # ***************************************************************
-        # This needs to be replaced for the user that is logged in
+
         currentUser = request.user.username
         sumScores = [[], [], [], []]
-        averageScores = [None] * 4
+        averageScores = [None] * 5
 
-        for score in Results.objects.filter(id=currentUser):
+        for score in Results.objects.filter(userName=currentUser):
             sumScores[score.operator].append(score.average)
         for s in sumScores:
             if len(s) > 0:
@@ -155,17 +155,17 @@ class ChartData(APIView):
             else:
                 averageScores[i] = 0
         if len(total) > 0:
-            averageScores.append(sum(total) / float(len(total)))
+            averageScores[4] = sum(total) / float(len(total))
         else:
-            averageScores.append(0)
+            averageScores[4] = 0
 
         data.setdefault(currentUser, averageScores)
         data.setdefault("user", currentUser)
 
         allAverages = [[], [], [], [], []]
-        for user in Users.objects.all():
+        for user in User.objects.all():
             sumScores = [[], [], [], []]
-            averageScores = [None] * 4
+            averageScores = [None] * 5
             total.clear()
 
             for score in Results.objects.filter(id=currentUser):
@@ -178,9 +178,9 @@ class ChartData(APIView):
                 if averageScores[i] is not None:
                     total.append(averageScores[i])
             if len(total) > 0:
-                averageScores.append(sum(total) / float(len(total)))
+                averageScores[4] = sum(total) / float(len(total))
             else:
-                averageScores.append(None)
+                averageScores[4] = None
             for i in range(5):
                 if averageScores[i] is not None:
                     allAverages[i].append(averageScores[i])
