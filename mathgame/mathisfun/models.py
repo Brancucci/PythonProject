@@ -6,7 +6,7 @@ from django.db import models
 
 
 class Results(models.Model):
-    userName = models.CharField(max_length=10)
+    userName = models.CharField(max_length=20)
     operator = models.IntegerField(default=0)
     average = models.FloatField(default=0.0)
 
