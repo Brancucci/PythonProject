@@ -132,14 +132,15 @@ def results(request):
     return render(request, 'mathisfun/charts.html', {})
 
 
+
 class ChartData(APIView):
     authentication_classes = []
     permission_classes = []
 
-    def get(self, request, format=None):
+    def get(self, request, user_id):
         data = {}
 
-        currentUser = request.user.username
+        currentUser = user_id
         sumScores = [[], [], [], []]
         averageScores = [None] * 5
 
@@ -168,7 +169,7 @@ class ChartData(APIView):
             averageScores = [None] * 5
             total.clear()
 
-            for score in Results.objects.filter(id=currentUser):
+            for score in Results.objects.filter(userName=user):
                 sumScores[score.operator].append(score.average)
             for s in sumScores:
                 if len(s) > 0:

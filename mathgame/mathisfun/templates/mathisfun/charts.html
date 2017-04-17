@@ -3,7 +3,7 @@
 <script>
 {% block jquery %}
 
-    var endpoint = 'api/chart/data';
+    var endpoint = 'api/chart/data/{{user.username}}';
     $.ajax({
         method: "GET",
         url: endpoint,

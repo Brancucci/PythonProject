@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^selection/quizzer/$', views.quizzer, name='quizzer'),
     url(r'^selection/solver/$', views.solver, name='solver'),
     url(r'^selection/results/$', views.results, name='results'),
-    url(r'^selection/results/api/chart/data/$', views.ChartData.as_view()),
+    url(r'^selection/results/api/chart/data/(?P<user_id>[a-zA-Z0-9]+)/$', views.ChartData.as_view()),
 ]
