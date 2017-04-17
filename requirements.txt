@@ -2,3 +2,4 @@ Django
 Djangorestframework
 django-bootstrap3
 chartjs
+django-static-jquery
