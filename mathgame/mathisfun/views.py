@@ -108,6 +108,14 @@ def solver(request):
 
 @login_required
 def quizzer(request):
+    ''' Handles the request for the quizzing functionality
+    
+    Args:
+        request: the http request object
+    Returns:
+        rendering of the mathisfun/quizzer.html file
+        HttpResponseReidrect
+    '''
     model = Results()
     if request.method == 'POST':
         form = QuizzerForm(request.POST)
