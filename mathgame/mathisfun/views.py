@@ -13,6 +13,7 @@ from .models import Results
 from random import randint
 from mathgame.forms import QuizzerForm
 
+
 # Create your views here.
 
 Users = Results.objects.all()
@@ -180,6 +181,8 @@ class ChartData(APIView):
             averageScores[4] = sum(total) / float(len(total))
         else:
             averageScores[4] = 0
+        for i in range(5):
+            averageScores[i] = round(averageScores[i], 2)
 
         data.setdefault(currentUser, averageScores)
         data.setdefault("user", currentUser)
@@ -213,6 +216,8 @@ class ChartData(APIView):
                 averageScores[i] = sum(allAverages[i]) / float(len(allAverages[i]))
             else:
                 averageScores[i] = 0
+        for i in range(5):
+            averageScores[i] = round(averageScores[i], 2)
 
         data.setdefault("all", averageScores)
         return Response(data)
