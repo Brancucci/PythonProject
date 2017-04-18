@@ -18,11 +18,23 @@ from mathgame.forms import QuizzerForm
 Users = Results.objects.all()
 
 
-def index(request):
-    return render(request, 'mathisfun/login.html')
+# def index(request):
+#     return render(request, 'mathisfun/login.html')
 
 
 def login_view(request):
+    """ Login authentication for user
+
+    Keyword requests:
+    username -- POST parameter for username
+    password -- POST parameter for user's password
+
+    Returns: HttpResponse OR redirect
+    upon success -- redirects user to 'Selection'
+    Invalid username -- promts user that they do not exist
+    Invalid password -- promts user that the password is incorrect
+
+    """
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(username=username, password=password)
@@ -39,6 +51,7 @@ def login_view(request):
 
 @login_required
 def selection(request):
+    """ Main page for user that allows user to select activity for redirection"""
     return render(request, 'mathisfun/selection.html')
 
 OP_CHOICES = (
