@@ -69,14 +69,12 @@ class ChoiceForm(forms.Form):
 
 @login_required
 def solver(request):
-    ''' Handles the request for the solver functionality
-    
-    Args:
-        request: the http request object
-    Returns:
-        rendering of the mathisfun/solver.html file    
-    
-    '''
+    """
+    Handles the request for the solver functionality
+    :param  request: the http request object
+    :return rendering of the mathisfun/solver.html file
+
+    """
     ops = {'addition': add,
            'subtraction': sub,
            'multiplication': mul,
