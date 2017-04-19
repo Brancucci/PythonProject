@@ -69,7 +69,14 @@ class ChoiceForm(forms.Form):
 
 @login_required
 def solver(request):
-    """This function renders the Fraction Solver to help users with fractional math."""
+    ''' Handles the request for the solver functionality
+    
+    Args:
+        request: the http request object
+    Returns:
+        rendering of the mathisfun/solver.html file    
+    
+    '''
     ops = {'addition': add,
            'subtraction': sub,
            'multiplication': mul,
