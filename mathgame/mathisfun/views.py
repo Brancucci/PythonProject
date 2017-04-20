@@ -161,10 +161,22 @@ def results(request):
 
 
 class ChartData(APIView):
+    '''
+    Class based View that sends average
+    score data to chart in Results page
+    '''
     authentication_classes = []
     permission_classes = []
 
     def get(self, request, user_id):
+        '''
+        Creates arrays for average scores and stores them in
+        'data' to be used in the Results page chart
+        Args: request: the http request object,
+                user_id - taken from url during AJAX request
+        Returns: data as arrays of average scores for current user
+                    and all users back to AJAX call for chart creation
+        '''
         data = {}
 
         currentUser = user_id
