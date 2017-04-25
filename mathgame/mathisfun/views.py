@@ -188,53 +188,40 @@ class ChartData(APIView):
         for s in sumScores:
             if len(s) > 0:
                 averageScores[sumScores.index(s)] = (sum(s) / float(len(s)))
-        total = []
+        totalAvg = []
         for i in range(4):
-            if averageScores[i] is not None:
-                total.append(averageScores[i])
-            else:
-                averageScores[i] = 0
-        if len(total) > 0:
-            averageScores[4] = sum(total) / float(len(total))
-        else:
-            averageScores[4] = 0
+            for j in sumScores[i]:
+                totalAvg.append(j)
+        averageScores[4] = sum(totalAvg) / float(len(totalAvg))
         for i in range(5):
-            averageScores[i] = round(averageScores[i], 2)
+            if averageScores[i] == None:
+                averageScores[i] = 0.0
+            else:
+                averageScores[i] = round(averageScores[i], 2)
 
         data.setdefault(currentUser, averageScores)
         data.setdefault("user", currentUser)
 
         allAverages = [[], [], [], [], []]
-        for user in User.objects.all():
-            sumScores = [[], [], [], []]
-            averageScores = [None] * 5
-            total.clear()
-
-            for score in Results.objects.filter(userName=user):
-                sumScores[score.operator].append(score.average)
-            for s in sumScores:
-                if len(s) > 0:
-                    averageScores[sumScores.index(s)] = (sum(s) / float(len(s)))
-            total = []
-            for i in range(4):
-                if averageScores[i] is not None:
-                    total.append(averageScores[i])
-            if len(total) > 0:
-                averageScores[4] = sum(total) / float(len(total))
-            else:
-                averageScores[4] = None
-            for i in range(5):
-                if averageScores[i] is not None:
-                    allAverages[i].append(averageScores[i])
-
         averageScores = [None] * 5
-        for i in range(5):
-            if len(allAverages[i]) > 0:
-                averageScores[i] = sum(allAverages[i]) / float(len(allAverages[i]))
+
+        for score in Results.objects.all():
+            allAverages[score.operator].append(score.average)
+
+        totalAvg = [x for sublist in allAverages for x in sublist]
+        averageScores[4] = sum(totalAvg) / float(len(totalAvg))
+
+        for i in range(4):
+            if len(allAverages[i]) == 0:
+                averageScores[i] = 0.0
             else:
-                averageScores[i] = 0
+                averageScores[i] = sum(allAverages[i]) / float(len(allAverages[i]))
+
         for i in range(5):
-            averageScores[i] = round(averageScores[i], 2)
+            if averageScores[i] == None:
+                averageScores[i] = 0.0
+            else:
+                averageScores[i] = round(averageScores[i], 2)
 
         data.setdefault("all", averageScores)
         return Response(data)
